@@ -7,13 +7,15 @@ from picamera import PiCamera
 import time
 import datetime
 
+from facenav import closest_face
+
 #config
 show_video = False
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (320, 240)
-camera.framerate = 30
+camera.framerate = 1
 rawCapture = PiRGBArray(camera, size=(320, 240))
 
 #Load a cascade file for detecting faces
@@ -36,14 +38,17 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     timestamp = datetime.datetime.now()
     timedelta = timestamp - last_timestamp
     last_timestamp = timestamp
+
     print str(timedelta.total_seconds())
+
     # convert it to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    #Look for faces in the image using the loaded cascade file
+    #Look for faces in the image using the loaded cascade file - this is extreamly slow.
     faces = face_cascade.detectMultiScale(gray, 1.1, 5)
 
     print "Found "+str(len(faces))+" face(s)"
+    closest_face(faces)
 
     #Draw a rectangle around every found face
     # for (x,y,w,h) in faces:
