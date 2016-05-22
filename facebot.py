@@ -30,33 +30,33 @@ last_timestamp = datetime.datetime.now()
 
 # capture frames from the camera
 for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-	# grab the raw NumPy array representing the image and initialize
-	# the timestamp and occupied/unoccupied text
-	frame = f.array
-	timestamp = datetime.datetime.now()
+    # grab the raw NumPy array representing the image and initialize
+    # the timestamp and occupied/unoccupied text
+    frame = f.array
+    timestamp = datetime.datetime.now()
     timedelta = timestamp - last_timestamp
     last_timestamp = timestamp
     print str(timedelta.total_seconds())
-	# convert it to grayscale
-	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # convert it to grayscale
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-	#Look for faces in the image using the loaded cascade file
-	faces = face_cascade.detectMultiScale(gray, 1.1, 5)
+    #Look for faces in the image using the loaded cascade file
+    faces = face_cascade.detectMultiScale(gray, 1.1, 5)
 
-	print "Found "+str(len(faces))+" face(s)"
+    print "Found "+str(len(faces))+" face(s)"
 
-	#Draw a rectangle around every found face
-	# for (x,y,w,h) in faces:
-	# 	cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+    #Draw a rectangle around every found face
+    # for (x,y,w,h) in faces:
+    #     cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
 
-	# check to see if the frames should be displayed to screen
-	if show_video:
-		# display the security feed
-		cv2.imshow("Faces", frame)
-		key = cv2.waitKey(1) & 0xFF
+    # check to see if the frames should be displayed to screen
+    if show_video:
+        # display the security feed
+        cv2.imshow("Faces", frame)
+        key = cv2.waitKey(1) & 0xFF
 
-		# if the `q` key is pressed, break from the lop
-		if key == ord("q"):
-			break
-	# clear the stream in preparation for the next frame
-	rawCapture.truncate(0)
+        # if the `q` key is pressed, break from the lop
+        if key == ord("q"):
+            break
+    # clear the stream in preparation for the next frame
+    rawCapture.truncate(0)
