@@ -34,14 +34,14 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 	# convert it to grayscale
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    #Look for faces in the image using the loaded cascade file
-    faces = face_cascade.detectMultiScale(gray, 1.1, 5)
+	#Look for faces in the image using the loaded cascade file
+	faces = face_cascade.detectMultiScale(gray, 1.1, 5)
 
-    print "Found "+str(len(faces))+" face(s)"
+	print "Found "+str(len(faces))+" face(s)"
 
-    #Draw a rectangle around every found face
-    for (x,y,w,h) in faces:
-        cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+	#Draw a rectangle around every found face
+	for (x,y,w,h) in faces:
+		cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
 
 	# check to see if the frames should be displayed to screen
 	if show_video:
