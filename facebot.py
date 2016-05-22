@@ -2,36 +2,53 @@ import io
 import picamera
 import cv2
 import numpy
+from picamera.array import PiRGBArray
+import time
 
-#Create a memory stream so photos doesn't need to be saved in a file
-stream = io.BytesIO()
 
-#Get the picture (low resolution, so it should be quite fast)
-#Here you can also specify other parameters (e.g.:rotate the image)
-with picamera.PiCamera() as camera:
-    camera.resolution = (320, 240)
-    camera.capture(stream, format='jpeg')
+#config
+show_video = True
 
-#Convert the picture into a numpy array
-buff = numpy.fromstring(stream.getvalue(), dtype=numpy.uint8)
-
-#Now creates an OpenCV image
-image = cv2.imdecode(buff, 1)
+# initialize the camera and grab a reference to the raw camera capture
+camera = PiCamera()
+camera.resolution = (320, 240)
+camera.framerate = 30
+rawCapture = PiRGBArray(camera, size=(320, 240))
 
 #Load a cascade file for detecting faces
 face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
 
-#Convert to grayscale
-gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+# allow the camera to warmup, then initialize the average frame, last
+# uploaded timestamp, and frame motion counter
+print "[INFO] warming up..."
+time.sleep(0.5)
+avg = None
 
-#Look for faces in the image using the loaded cascade file
-faces = face_cascade.detectMultiScale(gray, 1.1, 5)
+# capture frames from the camera
+for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+	# grab the raw NumPy array representing the image and initialize
+	# the timestamp and occupied/unoccupied text
+	frame = f.array
+	timestamp = datetime.datetime.now()
 
-print "Found "+str(len(faces))+" face(s)"
+	# convert it to grayscale
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-#Draw a rectangle around every found face
-for (x,y,w,h) in faces:
-    cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
+    #Look for faces in the image using the loaded cascade file
+    faces = face_cascade.detectMultiScale(gray, 1.1, 5)
 
-#Save the result image
-cv2.imwrite('result.jpg',image)
+    print "Found "+str(len(faces))+" face(s)"
+
+    #Draw a rectangle around every found face
+    for (x,y,w,h) in faces:
+        cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+
+	# check to see if the frames should be displayed to screen
+	if show_video:
+		# display the security feed
+		cv2.imshow("Faces", frame)
+		key = cv2.waitKey(1) & 0xFF
+
+		# if the `q` key is pressed, break from the lop
+		if key == ord("q"):
+			break
