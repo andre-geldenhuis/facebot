@@ -7,7 +7,7 @@ from picamera import PiCamera
 import time
 import datetime
 
-from facenav import closest_face
+from facenav import closest_face, facenav
 
 #config
 show_video = False
@@ -31,6 +31,9 @@ avg = None
 # initialize the timestamp
 last_timestamp = datetime.datetime.now()
 
+# Sample face - x,y,w,h from lower left
+test_faces=[[ 83,  27, 167, 167]]
+
 # capture frames from the camera
 for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array representing the image and initialize
@@ -49,11 +52,13 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     faces = face_cascade.detectMultiScale(gray, 1.1, 5)
 
     print "Found "+str(len(faces))+" face(s)"
-    closest_face(faces)
 
-    #Draw a rectangle around every found face
-    # for (x,y,w,h) in faces:
-    #     cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+    # Select closest face
+    face = closest_face(faces)
+
+    facenav(face)
+
+
 
     # check to see if the frames should be displayed to screen
     if show_video:
