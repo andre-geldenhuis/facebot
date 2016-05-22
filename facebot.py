@@ -8,7 +8,7 @@ import time
 import datetime
 
 #config
-show_video = True
+show_video = False
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -25,13 +25,18 @@ print "[INFO] warming up..."
 time.sleep(0.5)
 avg = None
 
+# initialize the timestamp
+last_timestamp = datetime.datetime.now()
+
 # capture frames from the camera
 for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 	# grab the raw NumPy array representing the image and initialize
 	# the timestamp and occupied/unoccupied text
 	frame = f.array
 	timestamp = datetime.datetime.now()
-
+    timedelta = timestamp - last_timestamp
+    last_timestamp = timestamp
+    print str(timedelta.total_seconds())
 	# convert it to grayscale
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -41,8 +46,8 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 	print "Found "+str(len(faces))+" face(s)"
 
 	#Draw a rectangle around every found face
-	for (x,y,w,h) in faces:
-		cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+	# for (x,y,w,h) in faces:
+	# 	cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
 
 	# check to see if the frames should be displayed to screen
 	if show_video:
