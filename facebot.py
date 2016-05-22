@@ -15,11 +15,12 @@ show_video = False
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (320, 240)
-camera.framerate = 1
+camera.framerate = 3
 rawCapture = PiRGBArray(camera, size=(320, 240))
 
 #Load a cascade file for detecting faces
-face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
+#face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml') #accurate but slow
+face_cascade = cv2.CascadeClassifier('/usr/share/opencv/lbpcascades/lbpcascade_frontalface.xml') #faster but less accurate
 
 # allow the camera to warmup, then initialize the average frame, last
 # uploaded timestamp, and frame motion counter

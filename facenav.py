@@ -12,4 +12,4 @@ def closest_face(faces):
         # Start assuming the first face is the closest
         closest = faces[0]
         for face in faces:
-            1/0
+           pass
