@@ -3,8 +3,9 @@ import picamera
 import cv2
 import numpy
 from picamera.array import PiRGBArray
+from picamera import PiCamera
 import time
-
+import datetime
 
 #config
 show_video = True
@@ -52,3 +53,5 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 		# if the `q` key is pressed, break from the lop
 		if key == ord("q"):
 			break
+	# clear the stream in preparation for the next frame
+	rawCapture.truncate(0)
