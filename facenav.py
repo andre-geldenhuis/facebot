@@ -11,14 +11,14 @@ scene_width = 320
 turning_hyst = 25
 
 # Turning proportional settings
-turningK = 0.1
-turningMax = 0.2 # Max time turning
+turningK = 0.01
+turningMax = 0.1 # Max time turning
 
 # Drive toward face settings
 target_face_width = 100
 # Target face proportional controller settings
-driveK = 0.1
-driveMax = 0.2
+driveK = 0.01
+driveMax = 0.1
 
 
 scene_center = scene_width / 2.0
@@ -55,14 +55,16 @@ def facedrive(face):
     face_center = x + y/2.0
 
     # face center difference -ve means left adjust necessary, +ve means right adjust
-    face_center_error= face_center - face_center
-
+    face_center_error= face_center - scene_center
+    print 'Face center error: ' + str(face_center_error)
     #If outside the turning hysteresis window, turn, else don't.
     if abs(face_center_error) > turning_hyst:
         # turn
         # proportional control the turn
         turn_right = face_center_error >= 0
-        turn_time = turningK * abs(face_center_error)
+        print 'Turning Right ' + str(turn_right)
+
+	turn_time = turningK * abs(face_center_error)
         if turn_time > turningMax:
             turn_time = turningMax
 
@@ -73,6 +75,7 @@ def facedrive(face):
             rr.left(turn_time)
 
     else:
+        print 'driving'
         #drive toward faces -- +ve == drive toward
         drive_error = target_face_width - w
         drive_forward = drive_error >= 0
@@ -83,6 +86,8 @@ def facedrive(face):
             drive_time = driveMax
 
         if drive_forward:
-            rr.forward(drive_time)
+            #rr.forward(drive_time)
+            pass
         else:
-            rr.backward(drive_time)
+            #rr.backward(drive_time)
+            pass

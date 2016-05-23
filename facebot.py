@@ -7,7 +7,7 @@ from picamera import PiCamera
 import time
 import datetime
 
-from facenav import closest_face, facenav
+from facenav import closest_face, facedrive
 
 #config
 show_video = False
@@ -19,8 +19,8 @@ camera.framerate = 3
 rawCapture = PiRGBArray(camera, size=(320, 240))
 
 #Load a cascade file for detecting faces
-#face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml') #accurate but slow
-face_cascade = cv2.CascadeClassifier('/usr/share/opencv/lbpcascades/lbpcascade_frontalface.xml') #faster but less accurate
+face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml') #accurate but slow
+#face_cascade = cv2.CascadeClassifier('/usr/share/opencv/lbpcascades/lbpcascade_frontalface.xml') #faster but less accurate
 
 # allow the camera to warmup, then initialize the average frame, last
 # uploaded timestamp, and frame motion counter
@@ -55,8 +55,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 
     # Select closest face
     face = closest_face(faces)
-
-    facenav(face)
+    
+    # This is a cumbersome test to see if there is a face
+    if not isinstance(face, bool):
+        # If a face exists, commence menacing driving    
+        facedrive(face)
 
 
 
