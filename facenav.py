@@ -11,14 +11,14 @@ scene_width = 320
 turning_hyst = 25
 
 # Turning proportional settings
-turningK = 0.01
-turningMax = 0.1 # Max time turning
+turningK = 0.001
+turningMax = 0.05 # Max time turning
 
 # Drive toward face settings
 target_face_width = 100
 # Target face proportional controller settings
-driveK = 0.01
-driveMax = 0.1
+driveK = 0.001
+driveMax = 0.05
 
 
 scene_center = scene_width / 2.0
@@ -84,10 +84,11 @@ def facedrive(face):
         drive_time = driveK * abs(drive_error)
         if drive_time > driveMax:
             drive_time = driveMax
-
-        if drive_forward:
-            #rr.forward(drive_time)
-            pass
-        else:
-            #rr.backward(drive_time)
-            pass
+        if drive_time != 0.0:
+            if drive_forward:
+                print 'Driving forward:' + str(drive_time)
+                rr.forward(drive_time)
+            else:
+                print 'Driving backward:' +str(drive_time)
+                rr.reverse(drive_time)
+            
