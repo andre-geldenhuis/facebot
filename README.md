@@ -1,7 +1,7 @@
 # Facebot
 
 A little raspberry pi based robot that lurches menacingly toward human faces.
-The OpenCV code code is cobbled together from various openCV demos on http://www.pyimagesearch.com/
+The OpenCV code is cobbled together from various openCV demos on http://www.pyimagesearch.com/
 
 ![Facebot](/images/facebot.jpg?raw=true "The Menacing Facebot")
 
